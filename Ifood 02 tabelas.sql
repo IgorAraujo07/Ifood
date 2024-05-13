@@ -1,57 +1,113 @@
 -- Tabela de Clientes
-CREATE TABLE Cliente (
-    cliente_id INT PRIMARY KEY,
-    nome VARCHAR(100),
-    email VARCHAR(100),
-    telefone VARCHAR(15),
-    endereco VARCHAR(255)
-);
--- Tabela de usuários
-CREATE TABLE Restaurante (
-    restaurante_id INT PRIMARY KEY,
-    nome VARCHAR(100),
-    tipo_culinaria VARCHAR(100),
-    endereco VARCHAR(255),
-    telefone VARCHAR(15)
+
+CREATE TABLE usuario (
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT,
+nome VARCHAR(100),
+email VARCHAR(100)UNIQUE,
+senha VARCHAR(60),
+telefone VARCHAR(20),
+cpf VARCHAR(11)UNIQUE
 );
 
-CREATE TABLE Pedido (
-    pedido_id INT PRIMARY KEY,
-    cliente_id INT,
-    restaurante_id INT,
-    data_pedido DATE,
-    estado_pedido VARCHAR(50),
-    valor_total DECIMAL(10, 2)
+CREATE TABLE restaurante(
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT,
+nome VARCHAR(100), 
+descricao VARCHAR(100),
+telefone VARCHAR(20),
+avaliacao FLOAT,
+cnpj VARCHAR(30)
 );
 
-CREATE TABLE ItemPedido (
-    item_pedido_id INT PRIMARY KEY,
-    pedido_id INT,
-    nome_produto VARCHAR(100),
-    quantidade INT,
-    preco_unitario DECIMAL(10, 2)
+CREATE TABLE categoria_estabelecimeto(
+ID  INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT,
+nome VARCHAR(100),
+descricao VARCHAR(100)
 );
 
-CREATE TABLE Entregador (
-    entregador_id INT PRIMARY KEY,
-    nome VARCHAR(100),
-    telefone VARCHAR(15),
-    veiculo VARCHAR(50),
-    placa_veiculo VARCHAR(20)
+CREATE TABLE endereco(
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT,
+rua VARCHAR(100),
+bairro VARCHAR(100),
+cidade VARCHAR(80),
+cep VARCHAR(20),
+numero VARCHAR(10),
+complemento VARCHAR(100),
+padrao INT
 );
 
-CREATE TABLE Entrega (
-    entrega_id INT PRIMARY KEY,
-    pedido_id INT,
-    entregador_id INT,
-    data_entrega DATE,
-    status_entrega VARCHAR(50)
+CREATE TABLE produto(
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT,
+nome VARCHAR(100),
+preco INT,
+descricao VARCHAR(100)
+
+CREATE TABLE categoria_produto(
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT,
+nome VARCHAR(60),
+descricao VARCHAR(60)
 );
 
-CREATE TABLE Pagamento (
-    pagamento_id INT PRIMARY KEY,
-    pedido_id INT,
-    valor_pago DECIMAL(10, 2),
-    metodo_pagamento VARCHAR(50),
-    status_pagamento VARCHAR(50)
+CREATE TABLE adicional(
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT,
+nome VARCHAR(60),
+valor INT,
+descricao VARCHAR(60)
 );
+
+CREATE TABLE pedido(
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT,
+taxaEntrega INT,
+valorTotal INT,
+descricao VARCHAR(100)
+is_retirada INT
+);
+
+CREATE TABLE status_pedido(
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT,
+nome VARCHAR(100),
+descricao VARCHAR(100)
+);
+
+CREATE TABLE historico_pedido(
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT
+);
+
+CREATE TABLE cupom(
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+dateCreate INT,
+dateTime INT,
+status INT,
+codigo VARCHAR(20) NOT NULL,
+valor INT,
+descriao VARCHAR(100),
+validade INT NOT NULL
