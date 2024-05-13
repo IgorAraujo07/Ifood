@@ -111,3 +111,4 @@ codigo VARCHAR(20) NOT NULL,
 valor INT,
 descriao VARCHAR(100),
 validade INT NOT NULL
+):
