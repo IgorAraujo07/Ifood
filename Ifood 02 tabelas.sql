@@ -1,5 +1,4 @@
 -- Tabela de Clientes
-
 CREATE TABLE usuario (
 ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 dateCreate INT,
