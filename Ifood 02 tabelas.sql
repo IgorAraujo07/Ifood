@@ -1,360 +1,306 @@
--- Tabela Clientes
+-- Tabela Usuario
 CREATE TABLE usuario (
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-nome VARCHAR(60),
-email VARCHAR(60)UNIQUE,
-senha VARCHAR(60),
-telefone VARCHAR(20),
-cpf VARCHAR(11)UNIQUE
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    nome VARCHAR(60),
+    email VARCHAR(60) UNIQUE,
+    senha VARCHAR(60),
+    telefone VARCHAR(20),
+    cpf VARCHAR(11) UNIQUE
 );
 
-CREATE TABLE restaurante(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-nome VARCHAR(60), 
-descricao VARCHAR(60),
-telefone VARCHAR(20),
-avaliacao FLOAT,
-cnpj VARCHAR(30)
+-- Tabela Restaurante
+CREATE TABLE restaurante (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    nome VARCHAR(60),
+    descricao VARCHAR(255),
+    telefone VARCHAR(20),
+    avaliacao FLOAT,
+    cnpj VARCHAR(14) UNIQUE
 );
 
-CREATE TABLE categoria_estabelecimeto(
-ID  INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-nome VARCHAR(60),
-descricao VARCHAR(60)
+-- Tabela Categoria_Estabelecimento
+CREATE TABLE categoria_estabelecimento (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    nome VARCHAR(60),
+    descricao VARCHAR(255)
 );
 
-CREATE TABLE endereco(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-rua VARCHAR(60),
-bairro VARCHAR(60),
-cidade VARCHAR(60),
-cep VARCHAR(20),
-numero VARCHAR(10),
-complemento VARCHAR(100),
-padrao INT
+-- Tabela Endereco
+CREATE TABLE endereco (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    rua VARCHAR(60),
+    bairro VARCHAR(60),
+    cidade VARCHAR(60),
+    cep VARCHAR(10),
+    numero VARCHAR(10),
+    complemento VARCHAR(100),
+    padrao INT,
+    ID_usuario INT,
+    ID_restaurante INT,
+    CONSTRAINT FK_usuario FOREIGN KEY (ID_usuario) REFERENCES usuario(ID),
+    CONSTRAINT FK_restaurante FOREIGN KEY (ID_restaurante) REFERENCES restaurante(ID)
 );
 
-CREATE TABLE produto(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-nome VARCHAR(60),
-preco INT,
-descricao VARCHAR(60)
+-- Tabela Categoria_Produto
+CREATE TABLE categoria_produto (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    nome VARCHAR(60),
+    descricao VARCHAR(255)
 );
 
-CREATE TABLE categoria_produto(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-nome VARCHAR(60),
-descricao VARCHAR(60)
+-- Tabela Produto
+CREATE TABLE produto (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    nome VARCHAR(60),
+    preco DECIMAL(10, 2),
+    descricao VARCHAR(255),
+    categoria_produto_ID INT,
+    restaurante_ID INT,
+    CONSTRAINT FK_categoria_produto FOREIGN KEY (categoria_produto_ID) REFERENCES categoria_produto(ID),
+    CONSTRAINT FK_restaurante_produto FOREIGN KEY (restaurante_ID) REFERENCES restaurante(ID)
 );
 
-CREATE TABLE adicional(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-nome VARCHAR(60),
-valor INT,
-descricao VARCHAR(60)
+-- Tabela Adicional
+CREATE TABLE adicional (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    nome VARCHAR(60),
+    valor DECIMAL(10, 2),
+    descricao VARCHAR(255)
 );
 
-CREATE TABLE pedido(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-taxaEntrega INT,
-valorTotal INT,
-descricao VARCHAR(60)
-is_retirada INT
+-- Tabela Pedido
+CREATE TABLE pedido (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    taxaEntrega DECIMAL(10, 2),
+    valorTotal DECIMAL(10, 2),
+    descricao VARCHAR(255),
+    is_retirada INT,
+    endereco_ID INT,
+    usuario_ID INT,
+    restaurante_ID INT,
+    cupom_ID INT,
+    status_pedido_ID INT,
+    CONSTRAINT FK_endereco FOREIGN KEY (endereco_ID) REFERENCES endereco(ID),
+    CONSTRAINT FK_usuario_pedido FOREIGN KEY (usuario_ID) REFERENCES usuario(ID),
+    CONSTRAINT FK_restaurante_pedido FOREIGN KEY (restaurante_ID) REFERENCES restaurante(ID),
+    CONSTRAINT FK_cupom FOREIGN KEY (cupom_ID) REFERENCES cupom(ID),
+    CONSTRAINT FK_status_pedido FOREIGN KEY (status_pedido_ID) REFERENCES status_pedido(ID)
 );
 
-CREATE TABLE status_pedido(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-nome VARCHAR(60),
-descricao VARCHAR(60)
+-- Tabela Status_Pedido
+CREATE TABLE status_pedido (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    nome VARCHAR(60),
+    descricao VARCHAR(255)
 );
 
-CREATE TABLE historico_pedido(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT
+-- Tabela Historico_Pedido
+CREATE TABLE historico_pedido (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    pedido_ID INT,
+    status_pedido_ID INT,
+    CONSTRAINT FK_pedido_historico FOREIGN KEY (pedido_ID) REFERENCES pedido(ID),
+    CONSTRAINT FK_status_pedido_historico FOREIGN KEY (status_pedido_ID) REFERENCES status_pedido(ID)
 );
 
-CREATE TABLE cupom(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-codigo VARCHAR(15) NOT NULL,
-valor INT,
-descriao VARCHAR(60),
-validade INT NOT NULL
+-- Tabela Cupom
+CREATE TABLE cupom (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    codigo VARCHAR(15) NOT NULL,
+    valor DECIMAL(10, 2),
+    descricao VARCHAR(255),
+    validade TIMESTAMP NOT NULL
 );
 
-CREATE TABLE adicional_produto_pedido(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora  INT,
-status INT,
-quantidade INT
+-- Tabela Adicional_Produto_Pedido
+CREATE TABLE adicional_produto_pedido (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    quantidade INT,
+    pedido_produto_ID INT,
+    adicional_ID INT,
+    CONSTRAINT FK_pedido_produto FOREIGN KEY (pedido_produto_ID) REFERENCES pedido_produto(ID),
+    CONSTRAINT FK_adicional FOREIGN KEY (adicional_ID) REFERENCES adicional(ID)
 );
 
-CREATE TABLE avaliacao(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-nota_restaurante INT,
-nota_pedido INT,
-descricao VARCHAR(60)
+-- Tabela Avaliacao
+CREATE TABLE avaliacao (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    nota_restaurante INT,
+    nota_pedido INT,
+    descricao VARCHAR(255),
+    pedido_ID INT,
+    CONSTRAINT FK_pedido_avaliacao FOREIGN KEY (pedido_ID) REFERENCES pedido(ID)
 );
 
-CREATE TABLE pagamento(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-valor INT NOT NULL,
-data_hora INT
+-- Tabela Metodo_Pagamento
+CREATE TABLE metodo_pagamento (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    nome VARCHAR(60),
+    descricao VARCHAR(255)
 );
 
-CREATE TABLE metado_pagamento(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData  INT,
-dataHora INT,
-status INT,
-nome VARCHAR(60),
-descricao VARCHAR(60)
+-- Tabela Status_Pagamento
+CREATE TABLE status_pagamento (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    nome VARCHAR(60),
+    descricao VARCHAR(255)
 );
 
-CREATE TABLE status_pagamento(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-nome VARCHAR(60),
-descricao VARCHAR(60)
+-- Tabela Pagamento
+CREATE TABLE pagamento (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    valor DECIMAL(10, 2) NOT NULL,
+    pedido_ID INT,
+    metodo_pagamento_ID INT,
+    status_pagamento_ID INT,
+    CONSTRAINT FK_pedido_pagamento FOREIGN KEY (pedido_ID) REFERENCES pedido(ID),
+    CONSTRAINT FK_metodo_pagamento FOREIGN KEY (metodo_pagamento_ID) REFERENCES metodo_pagamento(ID),
+    CONSTRAINT FK_status_pagamento FOREIGN KEY (status_pagamento_ID) REFERENCES status_pagamento(ID)
 );
 
-CREATE TABLE favoritos(
-ID_usuario INT,
-ID_restaurante INT
+-- Tabela Favoritos
+CREATE TABLE favoritos (
+    ID_usuario INT,
+    ID_restaurante INT,
+    CONSTRAINT FK_usuario_favoritos FOREIGN KEY (ID_usuario) REFERENCES usuario(ID),
+    CONSTRAINT FK_restaurante_favoritos FOREIGN KEY (ID_restaurante) REFERENCES restaurante(ID),
+    PRIMARY KEY (ID_usuario, ID_restaurante)
 );
 
-CREATE TABLE pedido_produto(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT
+-- Tabela Pedido_Produto
+CREATE TABLE pedido_produto (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    pedido_ID INT,
+    produto_ID INT,
+    CONSTRAINT FK_pedido_produto FOREIGN KEY (pedido_ID) REFERENCES pedido(ID),
+    CONSTRAINT FK_produto_pedido FOREIGN KEY (produto_ID) REFERENCES produto(ID)
 );
 
-CREATE TABLE funcionamento_restaurante(
-ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-criarData INT,
-dataHora INT,
-status INT,
-dia INT,
-hora_abrir INT,
-hora_fechar INT
+-- Tabela Funcionamento_Restaurante
+CREATE TABLE funcionamento_restaurante (
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    criarData TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status INT,
+    dia INT,
+    hora_abrir TIME,
+    hora_fechar TIME,
+    restaurante_ID INT,
+    CONSTRAINT FK_restaurante_funcionamento FOREIGN KEY (restaurante_ID) REFERENCES restaurante(ID)
 );
 
-CREATE TABLE adicionar_produto(
-ID_produto INT,
-ID_adicional INT
+-- Tabela Adicionar_Produto
+CREATE TABLE adicionar_produto (
+    produto_ID INT,
+    adicional_ID INT,
+    CONSTRAINT FK_produto_adicional FOREIGN KEY (produto_ID) REFERENCES produto(ID),
+    CONSTRAINT FK_adicional_produto FOREIGN KEY (adicional_ID) REFERENCES adicional(ID),
+    PRIMARY KEY (produto_ID, adicional_ID)
 );
-
-/* NESSA PARTE DO GODIGO SERA FEITA AS ALTERAÇÕES DAS TABELAS */
-
-
-/* TABELA RESTAURANTE*/
-ALTER TABLE restaurante
-ADD CONSTRAINT categoria_estabelecimeto_FK
-FOREIGN KEY (categoria_estabelecimeto_ID) REFERENCES categoria_estabelecimeto (ID);
-
-/*TABELA ENDEREÇO*/
-ALTER TABLE endereco
-ADD CONSTRAINT usuario_FK
-FOREIGN KEY (ID_usuario) REFERENCES usuario(ID);
-ALTER TABLE endereco
-ADD CONSTRAINT restaurante_FK
-FOREIGN KEY (ID_restaurante) REFERENCES restaurante(ID);
-
-/*TABELA PRODUTO*/
-ALTER TABLE produto
-ADD CONSTRAINT categoria_produto_FK
-FOREIGN KEY (categoria_produto_ID) REFERENCES categoria_produto(ID);
-ALTER TABLE produto
-ADD CONSTRAINT restaurante_FK
-FOREIGN KEY (ID_restaurante) REFERENCES restaurante(ID);
-
-/*TABELA AVALIAÇÃO*/
-ALTER TABLE avaliacao
-ADD CONSTRAINT pedido_FK
-FOREIGN KEY (pedido_ID) REFERENCES pedido(ID);
-
-/*TABELA PEDIDO*/
-ALTER TABLE pedido
-ADD CONSTRAINT endereco_FK
-FOREIGN KEY (endereco_ID) REFERENCES endereco(ID);
-ALTER TABLE pedido
-ADD CONSTRAINT usuario_FK
-FOREIGN KEY(ID_usuario) REFERENCES usuario(ID);
-ALTER TABLE pedido
-ADD CONSTRAINT restaurante_FK
-FOREIGN KEY(ID_restaurante) REFERENCES restaurante(ID);
-ALTER TABLE pedido
-ADD CONSTRAINT cupom_FK
-FOREIGN KEY (cupom_ID) REFERENCES cupom(ID);
-ALTER TABLE pedido
-ADD CONSTRAINT status_pedido_FK
-FOREIGN KEY (status_pedido_ID) REFERENCES status_pedido(ID);
-
-/*TABELA ADICIONAR PRODUTO*/
-ALTER TABLE adicionar_produto
-ADD CONSTRAINT adicional_FK
-FOREIGN KEY (adicional_ID) REFERENCES adicional(ID);
-ALTER TABLE adicionar_produto
-ADD CONSTRAINT produto_FK
-FOREIGN KEY (ID_produto) REFERENCES produto(ID);
-
-/*TABELA FAVORITOS*/
-ALTER TABLE favoritos
-ADD CONSTRAINT usuario_FK
-FOREIGN KEY (ID_usuario) REFERENCES usuario(ID);
-ALTER TABLE favoritos
-ADD CONSTRAINT restaurante_FK
-FOREIGN KEY (ID_restaurante) REFERENCES restaurante(ID);
-
-/*TABELA PEDIDO-PRODUTO*/
-ALTER TABLE pedido_produto
-ADD CONSTRAINT pedido_FK
-FOREIGN KEY (pedido_ID) REFERENCES pedido(ID);
-ALTER TABLE pedido_produto
-ADD CONSTRAINT produto_FK
-FOREIGN KEY (ID_produto) REFERENCES produto(ID);
-
-/*TABELA ADICIONAL-PRODUTO-PEDIDO*/
-ALTER TABLE adicional_produto_pedido
-ADD CONSTRAINT pedido_produto_FK
-FOREIGN KEY (pedido_produto_ID) REFERENCES pedido_produto(ID);
-ALTER TABLE adicional_produto_pedido
-ADD CONSTRAINT adicional_FK
-FOREIGN KEY (adicional_ID) REFERENCES adicional(ID);
-
-/*TABELA HISTORICO PEDIDO*/
-ALTER TABLE historico_pedido
-ADD CONSTRAINT pedido_FK
-FOREIGN KEY (pedido_ID) REFERENCES pedido(ID);
-ALTER TABLE historico_pedido
-ADD CONSTRAINT status_pedido_FK
-FOREIGN KEY (status_pedido_ID) REFERENCES status_pedido(ID);
-
-/*TABELA PAGAMENTO*/
-ALTER TABLE pagamento
-ADD CONSTRAINT pedido_FK
-FOREIGN KEY (pedido_ID) REFERENCES pedido(ID);
-ALTER TABLE pagamento
-ADD CONSTRAINT metado_pagamento_FK
-FOREIGN KEY (metado_pagamento_ID) REFERENCES metado_pagamento(ID);
-ALTER TABLE pagamento
-ADD CONSTRAINT status_pagamento_FK
-FOREIGN KEY (status_pagamento_ID) REFERENCES status_pagamento(ID);
-
-/* TABELA FUNCIONAMENTO*/
-ALTER TABLE funcionamento_restaurante
-ADD CONSTRAINT restaurante_FK
-FOREIGN KEY (ID_restaurante) REFERENCES restaurante(ID);
 
 -- Inserir dados na tabela usuario
-INSERT INTO usuario (dateCreate, dateTime, status, nome, email, senha, telefone, cpf)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'João Silva', 'joao@example.com', 'senha123', '123456789', '12345678901');
+INSERT INTO usuario (status, nome, email, senha, telefone, cpf)
+VALUES (1, 'João Silva', 'joao@example.com', 'senha123', '123456789', '12345678901');
 
 -- Inserir dados na tabela restaurante
-INSERT INTO restaurante (dateCreate, dateTime, status, nome, descricao, telefone, avaliacao, cnpj)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'Restaurante ABC', 'Restaurante especializado em culinária internacional.', '987654321', 4.5, '12345678901234');
+INSERT INTO restaurante (status, nome, descricao, telefone, avaliacao, cnpj)
+VALUES (1, 'Restaurante ABC', 'Restaurante especializado em culinária internacional.', '987654321', 4.5, '12345678901234');
 
 -- Inserir dados na tabela categoria_estabelecimento
-INSERT INTO categoria_estabelecimento (dateCreate, dateTime, status, nome, descricao)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'Restaurante', 'Categoria para estabelecimentos de restaurante');
+INSERT INTO categoria_estabelecimento (status, nome, descricao)
+VALUES (1, 'Restaurante', 'Categoria para estabelecimentos de restaurante');
 
 -- Inserir dados na tabela endereco
-INSERT INTO endereco (dateCreate, dateTime, status, rua, bairro, cidade, cep, numero, complemento, padrao, ID_usuario, ID_restaurante)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'Rua A', 'Centro', 'Cidade A', '12345678', '123', 'Apartamento 101', 1, 1, 1);
-
--- Inserir dados na tabela produto
-INSERT INTO produto (dateCreate, dateTime, status, nome, preco, descricao, restaurante_ID)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'Pizza Margherita', 2500, 'Pizza clássica com molho de tomate, muçarela e manjericão fresco.', 1);
+INSERT INTO endereco (status, rua, bairro, cidade, cep, numero, complemento, padrao, ID_usuario, ID_restaurante)
+VALUES (1, 'Rua A', 'Centro', 'Cidade A', '12345678', '123', 'Apartamento 101', 1, 1, 1);
 
 -- Inserir dados na tabela categoria_produto
-INSERT INTO categoria_produto (dateCreate, dateTime, status, nome, descricao)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'Pizza', 'Categoria de produtos relacionados a pizza');
+INSERT INTO categoria_produto (status, nome, descricao)
+VALUES (1, 'Pizza', 'Categoria de produtos relacionados a pizza');
+
+-- Inserir dados na tabela produto
+INSERT INTO produto (status, nome, preco, descricao, categoria_produto_ID, restaurante_ID)
+VALUES (1, 'Pizza Margherita', 25.00, 'Pizza clássica com molho de tomate, muçarela e manjericão fresco.', 1, 1);
 
 -- Inserir dados na tabela adicional
-INSERT INTO adicional (dateCreate, dateTime, status, nome, valor, descricao)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'Borda recheada', 500, 'Borda da pizza recheada com queijo cheddar');
-
--- Inserir dados na tabela pedido
-INSERT INTO pedido (dateCreate, dateTime, status, taxaEntrega, valorTotal, descricao, is_retirada, endereco_ID, usuario_ID, restaurante_ID)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 300, 3000, 'Pedido de uma pizza margherita com borda recheada', 0, 1, 1, 1);
+INSERT INTO adicional (status, nome, valor, descricao)
+VALUES (1, 'Borda recheada', 5.00, 'Borda da pizza recheada com queijo cheddar');
 
 -- Inserir dados na tabela status_pedido
-INSERT INTO status_pedido (dateCreate, dateTime, status, nome, descricao)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'Pendente', 'Pedido aguardando confirmação');
+INSERT INTO status_pedido (status, nome, descricao)
+VALUES (1, 'Pendente', 'Pedido aguardando confirmação');
 
 -- Inserir dados na tabela cupom
-INSERT INTO cupom (dateCreate, dateTime, status, codigo, valor, descriao, validade)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'DESC10', 1000, 'Cupom de desconto de 10%', UNIX_TIMESTAMP() + (7 * 24 * 60 * 60)); -- Cupom válido por 7 dias
+INSERT INTO cupom (status, codigo, valor, descricao, validade)
+VALUES (1, 'DESC10', 10.00, 'Cupom de desconto de 10%', DATE_ADD(NOW(), INTERVAL 7 DAY));
+
+-- Inserir dados na tabela pedido
+INSERT INTO pedido (status, taxaEntrega, valorTotal, descricao, is_retirada, endereco_ID, usuario_ID, restaurante_ID, cupom_ID, status_pedido_ID)
+VALUES (1, 3.00, 30.00, 'Pedido de uma pizza margherita com borda recheada', 0, 1, 1, 1, 1, 1);
 
 -- Inserir dados na tabela adicionar_produto
-INSERT INTO adicionar_produto (ID_produto, ID_adicional)
-VALUES (1, 1); -- Adicionando borda recheada à pizza margherita
+INSERT INTO adicionar_produto (produto_ID, adicional_ID)
+VALUES (1, 1);
 
 -- Inserir dados na tabela pedido_produto
-INSERT INTO pedido_produto (dateCreate, dateTime, status)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1);
+INSERT INTO pedido_produto (status, pedido_ID, produto_ID)
+VALUES (1, 1, 1);
 
 -- Inserir dados na tabela adicional_produto_pedido
-INSERT INTO adicional_produto_pedido (dateCreate, dateTime, status, quantidade, pedido_produto_ID, adicional_ID)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 1, 1, 1);
+INSERT INTO adicional_produto_pedido (status, quantidade, pedido_produto_ID, adicional_ID)
+VALUES (1, 1, 1, 1);
 
 -- Inserir dados na tabela historico_pedido
-INSERT INTO historico_pedido (dateCreate, dateTime, status, pedido_ID, status_pedido_ID)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 1, 1);
-
--- Inserir dados na tabela pagamento
-INSERT INTO pagamento (dateCreate, dateTime, status, valor, data_hora, pedido_ID, metado_pagamento_ID, status_pagamento_ID)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 3000, UNIX_TIMESTAMP(), 1, 1, 1); -- Pagamento com valor total do pedido
-
--- Inserir dados na tabela metado_pagamento
-INSERT INTO metado_pagamento (dateCreate, dateTime, status, nome, descricao)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'Cartão de crédito', 'Pagamento realizado através de cartão de crédito');
-
--- Inserir dados na tabela status_pagamento
-INSERT INTO status_pagamento (dateCreate, dateTime, status, nome, descricao)
-VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 1, 'Pago', 'Pagamento foi efetuado com sucesso');
-
--- Inserir dados na tabela favoritos
-INSERT INTO favoritos (ID_usuario, ID_restaurante)
-VALUES (1, 1); -- Adicionando restaurante aos favoritos do usuário
+INSERT INTO historico_pedido (status, pedido_ID, status_pedido_ID)
+VALUES (1, 1, 
