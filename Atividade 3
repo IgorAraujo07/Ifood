@@ -1,0 +1,62 @@
+-- Tabela Livro
+CREATE TABLE Livro (
+    ISBN VARCHAR(20) PRIMARY KEY,         
+    Titulo VARCHAR(255) NOT NULL,        
+    AnoPublicacao INT CHECK (AnoPublicacao > 0), 
+    IdEditora INT,                         
+    FOREIGN KEY (IdEditora) REFERENCES Editora(IdEditora)
+);
+
+-- Tabela Editora
+CREATE TABLE Editora (
+    IdEditora INT PRIMARY KEY,               
+    Nome VARCHAR(255) NOT NULL             
+);
+
+-- Tabela Assunto
+CREATE TABLE Assunto (
+    IdAssunto INT PRIMARY KEY,              
+    Descricao VARCHAR(255) NOT NULL          
+);
+
+-- Tabela LivroAssunto (relacionamento muitos-para-muitos)
+CREATE TABLE LivroAssunto (
+    IdLivro VARCHAR(20) NOT NULL,           
+    IdAssunto INT NOT NULL,                  
+    PRIMARY KEY (IdLivro, IdAssunto),       
+    FOREIGN KEY (IdLivro) REFERENCES Livro(ISBN) ON DELETE CASCADE, 
+    FOREIGN KEY (IdAssunto) REFERENCES Assunto(IdAssunto) ON DELETE CASCADE
+);
+
+-- Tabela Autor
+CREATE TABLE Autor (
+    IdAutor INT PRIMARY KEY,                  
+    Nome VARCHAR(255) NOT NULL              
+);
+
+-- Tabela LivroAutor (relacionamento muitos-para-muitos)
+CREATE TABLE LivroAutor (
+    IdLivro VARCHAR(20) NOT NULL,            
+    IdAutor INT NOT NULL,                    
+    PRIMARY KEY (IdLivro, IdAutor),          
+    FOREIGN KEY (IdLivro) REFERENCES Livro(ISBN) ON DELETE CASCADE, 
+    FOREIGN KEY (IdAutor) REFERENCES Autor(IdAutor) ON DELETE CASCADE 
+);
+
+-- Tabela Usuario
+CREATE TABLE Usuario (
+    IdUsuario INT PRIMARY KEY,               
+    Nome VARCHAR(255) NOT NULL,              
+    Email VARCHAR(255) UNIQUE NOT NULL       
+);
+
+-- Tabela Emprestimo
+CREATE TABLE Emprestimo (
+    IdEmprestimo INT PRIMARY KEY,            
+    IdUsuario INT NOT NULL,                   
+    IdLivro VARCHAR(20) NOT NULL,             
+    DataEmprestimo DATE NOT NULL,             
+    DataDevolucao DATE,                      
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario) ON DELETE CASCADE, -- Relacionamento com Usuário
+    FOREIGN KEY (IdLivro) REFERENCES Livro(ISBN) ON DELETE CASCADE -- Relacionamento com Livro
+);
