@@ -57,6 +57,6 @@ CREATE TABLE Emprestimo (
     IdLivro VARCHAR(20) NOT NULL,             
     DataEmprestimo DATE NOT NULL,             
     DataDevolucao DATE,                      
-    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario) ON DELETE CASCADE, -- Relacionamento com Usuário
-    FOREIGN KEY (IdLivro) REFERENCES Livro(ISBN) ON DELETE CASCADE -- Relacionamento com Livro
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario) ON DELETE CASCADE, 
+    FOREIGN KEY (IdLivro) REFERENCES Livro(ISBN) ON DELETE CASCADE
 );
